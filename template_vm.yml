@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_server: "192.168.136.128"
+    vcenter_user: "root"
+    vcenter_pass: "admin@123"
+  tasks:
+  - name: Create a New VM with template
+    vmware_guest:
+      hostname: "{{ vcenter_server }}"
+      username: "{{ vcenter_user }}"
+      password: "{{ vcenter_pass }}"
+      validate_certs: False
+      name: testvm_2
+      template: vm1
+      # datacenter: "localhost.localdomain"
+      folder: / 
+      # cluster: "{{ cluster_name }}"
+      wait_for_ip_address: yes        
+    delegate_to: localhost

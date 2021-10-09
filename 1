@@ -1,0 +1,40 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_server: "192.168.136.128"
+    vcenter_user: "root"
+    vcenter_pass: "admin@123"
+  tasks:
+  - name: Clone the template
+    vmware_guest:
+      hostname: "{{ vcenter_server }}"
+      username: "{{ vcenter_user }}"
+      password: "{{ vcenter_pass }}"
+      validate_certs: False
+      name: vm01
+      datastore: "datastore1"
+      folder: /
+      guest_id: "Linux"
+      disk:
+      - size_gb: 10
+        type: thin
+        datastore: datastore1
+      hardware:
+        memory_mb: 512
+        num_cpus: 4
+        scsi: paravirtual
+      networks:
+      - name: VM Network
+        mac: aa:bb:dd:aa:00:14
+        ip: 10.10.10.100
+        netmask: 255.255.255.0
+        device_type: vmxnet3
+      customization:
+        hostname: "vm01"
+        dns_servers:
+        - 10.1.1.2
+        - 1.1.1.1
+      state: poweredon
+      wait_for_ip_address: yes
+    delegate_to: localhost
